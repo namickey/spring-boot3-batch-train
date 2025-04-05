@@ -3,30 +3,42 @@
 Spring-Bootでバッチアプリケーション開発
 
 ## やりたいこと
-* Spring-Bootを使った効率的な開発を行い、ワンコマンドでバッチアプリケーションを起動する
-* JAVAだけがインストールされたマシンで、アプリケーションを起動する
-* ORマッパーは`MyBatis`を使う
-* setter,getterは実装せず、`lombok`で生成する
-* アプリケーション開発は、`Spring Initializr`からデモアプリケーションをダウンロードして始める
-* `Maven`を使ったライブラリ管理（自動でjarをダウンロードして、クラスパスを通してくれる）
+- 処理方式として、ファイルとDBの入出力に挑戦
+  - 入力ファイルのデータをDB登録
+  - DB登録されたデータをファイル出力
 
-> [!TIP]
-> 【Java】Lombokで冗長コードを削減しよう  
-> https://www.casleyconsulting.co.jp/blog/engineer/107/ 
+## ユーザファイルのインポート機能について
+- 概要：CSV形式のユーザデータファイルをDBに登録する
+  - CSVデータ例：`1001,鈴木 一郎,マーケティング,2023-10-05`
+  - 同じファイルを何度でもインポートできるように、最初の処理でテーブルをクリアする
+  - 次の処理で、ファイル読み込みを行い、テーブルに登録を行う
+- ジョブ名は`importUsersJob`
+  - `step1`で、`trancateTasklet`でテーブルのデータを全件クリアする。
+  - `step2`のチャンク処理で、ファイル読み込みを行い、テーブルに登録を行う
+- チャンク処理
+  - `FlatFileItemReader`で、CSVファイルの読み込みを行う。
+    - ファイルパス
+    - オブジェクトへのマッピング（クラス名ImportUsersItem、項目名）
+  - `ItemProcessor`
+    - 型変換（`ImportUsersItem`Item ⇒ `Users`エンティティ）
+    - データチェック処理：不正データは後続処理に流さず、スキップする
+    - データ加工処理
+  - `ItemWriter`
+    - テーブルへのデータ一括登録(バルクインサート)
+    - Writerに渡される引数だけは`List`になっており、複数件の`Users`エンティティが渡ってくる
 
-## Spring-Bootとは
-
-- 設定ファイルレス  
-  Spring-WEB-MVCに対して、あらかじめ様々な設定が設定済みとなっているため、自分で設定ファイルを書く量が少ない
-
-- 簡単起動  
-  組み込みH2データベースを使用するため、データベースのインストールが不要
-
-- 素早く開始  
-  `Spring Initializr`を使って必要なライブラリが組み込まれた初期構成のアプリケーションをダウンロードできる
-
-- 短所としては、ライフサイクルが比較的短い  
-  https://spring.pleiades.io/projects/spring-boot#support
+## ユーザファイルのエクスポート機能について
+- 概要：ユーザテーブルのデータをCSV形式で、ファイル出力する
+  - CSVデータ例：`1001,鈴木 一郎,マーケティング,2023-10-05`
+- ジョブ名は`exportUsersJob`
+  - `step1`のチャンク処理で、テーブルデータをselectし、ファイル出力を行う
+- チャンク処理
+  - `MyBatisCursorItemReaderBuilder`
+    - マッパーを設定するだけ
+  - `ItemProcessor`
+    - 型変換（`Users`エンティティ ⇒ `ImportUsersItem`Item）
+  - `FlatFileItemWriter`
+    - ファイル形式の各種設定を行う
 
 ## 前提環境
 
@@ -42,16 +54,6 @@ Spring-Bootでバッチアプリケーション開発
 * lombok
 * 組み込みh2データベース
 * 組み込みMaven 3
-
-> [!TIP]
-> Java環境構築(Windows版)　JDKインストール  
-> https://www.techfun.co.jp/services/magazine/java/windows-jdk-install.html  
-> 
-> Java環境構築(Windows版)　パスの設定  
-> https://www.techfun.co.jp/services/magazine/java/windows-jdk-pathset.html  
-> 
-> Git Bashって使ってる？Windowsで動く意外にすごい便利ツール  
-> https://www.sejuku.net/blog/72673  
 
 ## ディレクトリ階層
 
@@ -155,8 +157,8 @@ C:.
 gitを使ってソースコードをダウンロードする
 ```
 コマンドプロンプトで実行
-git clone https://github.com/namickey/spring-boot3-batch-try.git
-cd spring-boot3-batch-try
+git clone https://github.com/namickey/spring-boot3-batch-train.git
+cd spring-boot3-batch-train
 ```
 
 ## 実行 spring-boot:run
@@ -167,39 +169,6 @@ cd spring-boot3-batch-try
 mvnw.cmd spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.name=importUsersJob"
 mvnw.cmd spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.name=exportUsersJob"
 ```
-
-## ユーザファイルのインポート機能について
-- 概要：CSV形式のユーザデータファイルをDBに登録する
-  - CSVデータ例：`1001,鈴木 一郎,マーケティング,2023-10-05`
-  - 同じファイルを何度でもインポートできるように、最初の処理でテーブルをクリアする
-  - 次の処理で、ファイル読み込みを行い、テーブルに登録を行う
-- ジョブ名は`importUsersJob`
-  - `step1`で、`trancateTasklet`でテーブルのデータを全件クリアする。
-  - `step2`のチャンク処理で、ファイル読み込みを行い、テーブルに登録を行う
-- チャンク処理
-  - `FlatFileItemReader`で、CSVファイルの読み込みを行う。
-    - ファイルパス
-    - オブジェクトへのマッピング（クラス名ImportUsersItem、項目名）
-  - `ItemProcessor`
-    - 型変換（`ImportUsersItem`Item ⇒ `Users`エンティティ）
-    - データチェック処理：不正データは後続処理に流さず、スキップする
-    - データ加工処理
-  - `ItemWriter`
-    - テーブルへのデータ一括登録(バルクインサート)
-    - Writerに渡される引数だけは`List`になっており、複数件の`Users`エンティティが渡ってくる
-
-## ユーザファイルのエクスポート機能について
-- 概要：ユーザテーブルのデータをCSV形式で、ファイル出力する
-  - CSVデータ例：`1001,鈴木 一郎,マーケティング,2023-10-05`
-- ジョブ名は`exportUsersJob`
-  - `step1`のチャンク処理で、テーブルデータをselectし、ファイル出力を行う
-- チャンク処理
-  - `MyBatisCursorItemReaderBuilder`
-    - マッパーを設定するだけ
-  - `ItemProcessor`
-    - 型変換（`Users`エンティティ ⇒ `ImportUsersItem`Item）
-  - `FlatFileItemWriter`
-    - ファイル形式の各種設定を行う
 
 ## H2DBの確認
 ```shell
@@ -221,12 +190,9 @@ JDBC URL：jdbc:h2:./h2db/testdb;AUTO_SERVER=TRUE
 https://start.spring.io/
 ![initializr](initializr.png)
 
-### 2. 統合開発環境を使って、今動かしたソースコードと同じものを実装し、動作確認する
+### 2. 統合開発環境としてVSCodeを使って、今動かしたソースコードと同じものを実装し、動作確認する
 > [!TIP]
-> 統合開発環境（vscode、eclipse、intelliJ）を使おう  
->   * vscode：おススメ、最新、軽量  
->   * eclipse：古き重き友人  
->   * intelliJ：おススメだが、WEB開発時の`spring-boot-devtools`の自動デプロイ機能と相性が悪い。intelliJは入力する度にファイル保存されてしまうから。  
+> 統合開発環境としてVSCodeを使おう  
 
 ### 3. 自分のgithubアカウントを作って、作ったソースを公開しよう
 
