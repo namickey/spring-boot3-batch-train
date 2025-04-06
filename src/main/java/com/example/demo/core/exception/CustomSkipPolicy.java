@@ -7,7 +7,7 @@ public class CustomSkipPolicy implements SkipPolicy {
 
     @Override
     public boolean shouldSkip(@SuppressWarnings("null") Throwable t, long skipCount) throws SkipLimitExceededException {
-        return t instanceof AppException;
+        return t instanceof SkipException;
     }
     
 }

@@ -1,6 +1,6 @@
 # spring-boot3-batch-train
 
-Spring-Bootでバッチアプリケーション開発
+Spring-Bootでバッチアプリケーション開発トレーニング
 
 ## やりたいこと
 - 処理方式として、ファイルとDBの入出力に挑戦
@@ -39,6 +39,16 @@ Spring-Bootでバッチアプリケーション開発
     - 型変換（`Users`エンティティ ⇒ `ImportUsersItem`Item）
   - `FlatFileItemWriter`
     - ファイル形式の各種設定を行う
+      - `encoding`：ファイルエンコーディング指定
+      - `name`：Writerに付ける名称
+      - `saveState`：再処理を行う場合に、処理済みレコードを記憶し、未処理レコードから処理を再開する
+      - `resource`：出力ファイルのパス
+      - `lineSeparator`：改行コード
+      - `shouldDeleteIfEmpty`：出力したファイルが空ファイルの場合、ファイルを削除する
+      - `delimited`：区切り文字を使用する
+      - `delimiter`：区切り文字
+      - `fieldExtractor`：ファイル出力項目を設定する
+      - etc
 
 ## 前提環境
 
@@ -183,6 +193,38 @@ JDBC URL：jdbc:h2:./h2db/testdb;AUTO_SERVER=TRUE
 ユーザ名：sa
 パスワード：
 ```
+
+## その他の機能
+
+### リスナー
+- 概要
+  - ジョブやステップの前後や例外発生時に呼び出される処理をジョブリスナー、ステップリスナーとして登録することができる。
+- `LogJobListener`は、ジョブ終了後に呼び出されるログ出力処理。
+```log
+出力イメージ
+2025-04-06T20:00:30.413+09:00  INFO 10312 --- [           main] c.e.demo.core.listener.LogJobListener    : AfterJob:input=28, skip=0
+```
+- `LogChunkListener`は、チャンク終了後に呼び出されるログ出力処理。
+```log
+出力イメージ
+2025-04-06T20:00:30.378+09:00  INFO 10312 --- [           main] c.e.demo.core.listener.LogChunkListener  : AfterChunk:input=10, skip=0, commit=1
+2025-04-06T20:00:30.392+09:00  INFO 10312 --- [           main] c.e.demo.core.listener.LogChunkListener  : AfterChunk:input=20, skip=0, commit=2
+2025-04-06T20:00:30.402+09:00  INFO 10312 --- [           main] c.e.demo.core.listener.LogChunkListener  : AfterChunk:input=28, skip=0, commit=3
+```
+### 後続処理のスキップ
+- 概要
+  - 入力レコード（ファイルなど）で、不正データが読み込まれた場合など、後続処理（Writer等）にそのレコードを受け渡したくない場合、そのレコードをスキップさせる。
+  - 入力件数が`10件`で、正常データが`9件`、不正データが`1件`で、Processor処理でスキップした時、後続Writerには`9件`が受け渡される。
+- 実現方法
+  - `SkipException`を、レコードを不正データとする場合には、スローする。
+  - `CustomSkipPolicy`に、スキップ扱いとする例外クラスを登録する。
+### 終了コード
+- 概要、背景
+  - Spring-Bootのバッチでは正常終了でも、異常終了でも、デフォルトの挙動では、終了コードが正常`0`で返却される。
+  - ジョブスケジューラやシェル等を使って実行制御を行う場合には、終了コードを切り替えること（正常`0`、異常`1`）が必要
+- 実現方法
+  - `BatchExitCodeGenerator`で、ステップ処理が異常終了した場合には、終了コードを異常`1`を返却する
+  - `BatchConfiguration`で、`終了コードジェネレータ`に上記クラスを登録する
 
 ## やってみよう 
 

@@ -5,7 +5,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.common.entity.Users;
-import com.example.demo.core.exception.AppException;
+import com.example.demo.core.exception.SkipException;
 
 @Component
 public class ImportUsersProcessor implements ItemProcessor<ImportUsersItem, Users> {
@@ -15,7 +15,7 @@ public class ImportUsersProcessor implements ItemProcessor<ImportUsersItem, User
 
         // 営業の部門は登録しない
         if ("営業".equals(item.getDepartment())) {
-            throw new AppException("営業は登録できません");
+            throw new SkipException("営業は登録できません");
         }
         // ユーザエンティティを生成して返却
         return item.toUsers();
