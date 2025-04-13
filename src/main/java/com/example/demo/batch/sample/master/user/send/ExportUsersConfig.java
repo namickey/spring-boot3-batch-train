@@ -1,4 +1,4 @@
-package com.example.demo.batch.master.user.send;
+package com.example.demo.batch.sample.master.user.send;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.batch.builder.MyBatisCursorItemReaderBuilder;

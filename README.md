@@ -72,19 +72,27 @@ Spring-Bootでバッチアプリケーション開発トレーニング
 C:.
 │  .gitattributes
 │  .gitignore
+│  app.drawio
+│  app.png
+│  card.drawio
+│  card.png
 │  initializr.png
 │  mvnw
 │  mvnw.cmd
+│  net.drawio
+│  net.png
 │  pom.xml
 │  README.md
+│  shopping.drawio
+│  shopping.png
 ├─.mvn
 │  └─wrapper
 │          maven-wrapper.properties
 ├─h2db
 │      .gitkeep
 │      h2-2.3.232.jar
-│      testdb.mv.db
-│      testdb.trace.db
+│      testdb.mv.db    ※alwaysモードで一度動かすと生成される
+│      testdb.trace.db ※alwaysモードで一度動かすと生成される
 ├─input-data
 │      user.csv
 ├─output-data
@@ -97,41 +105,44 @@ C:.
 │  │  │      └─example
 │  │  │          └─demo
 │  │  │              │  DemoApplication.java
-│  │  │              │
 │  │  │              ├─batch
-│  │  │              │  └─master
-│  │  │              │      └─user
-│  │  │              │          ├─receive
-│  │  │              │          │      ImportUsersConfig.java
-│  │  │              │          │      ImportUsersItem.java
-│  │  │              │          │      ImportUsersProcessor.java
-│  │  │              │          │      ImportUsersWriter.java
-│  │  │              │          │
-│  │  │              │          └─send
-│  │  │              │                  ExportUsersConfig.java
-│  │  │              │                  ExportUsersFieldExtractor.java
-│  │  │              │                  ExportUsersItem.java
-│  │  │              │                  ExportUsersProcessor.java
+│  │  │              │  ├─card
+│  │  │              │  │      .gitkeep
+│  │  │              │  ├─net
+│  │  │              │  │      .gitkeep
+│  │  │              │  ├─sample
+│  │  │              │  │  └─master
+│  │  │              │  │      └─user
+│  │  │              │  │          ├─receive
+│  │  │              │  │          │      ImportUsersConfig.java
+│  │  │              │  │          │      ImportUsersItem.java
+│  │  │              │  │          │      ImportUsersProcessor.java
+│  │  │              │  │          │      ImportUsersWriter.java
+│  │  │              │  │          └─send
+│  │  │              │  │                  ExportUsersConfig.java
+│  │  │              │  │                  ExportUsersFieldExtractor.java
+│  │  │              │  │                  ExportUsersItem.java
+│  │  │              │  │                  ExportUsersProcessor.java
+│  │  │              │  └─shopping
+│  │  │              │          .gitkeep
 │  │  │              │
 │  │  │              ├─common
 │  │  │              │  ├─entity
 │  │  │              │  │      Users.java
-│  │  │              │  │
 │  │  │              │  └─mapper
 │  │  │              │          UsersMapper.java
-│  │  │              │
 │  │  │              └─core
 │  │  │                  ├─config
 │  │  │                  │      BatchConfiguration.java
 │  │  │                  │      BatchExitCodeGenerator.java
 │  │  │                  │
 │  │  │                  ├─exception
-│  │  │                  │      AppException.java
-│  │  │                  │      BatchSkipPolicy.java
+│  │  │                  │      CustomSkipPolicy.java
+│  │  │                  │      SkipException.java
 │  │  │                  │
 │  │  │                  └─listener
-│  │  │                          BatchChunkListener.java
-│  │  │                          JobListener.java
+│  │  │                          LogChunkListener.java
+│  │  │                          LogJobListener.java
 │  │  │
 │  │  └─resources
 │  │          application.properties
@@ -171,16 +182,44 @@ git clone https://github.com/namickey/spring-boot3-batch-train.git
 cd spring-boot3-batch-train
 ```
 
+## 準備：テーブル作成
+
+1.application.propertiesの初期化設定を`always`に変える。  
+`schema-all.sql`を使った初期化が`ON`になる。
+```
+データベース初期化用DDL実行モード（ALWAYS、EMBEDDED、NEVER）
+spring.sql.init.mode=always
+```
+
+2.コマンドプロンプトで実行し、`schema-all.sql`を一度だけ実行しテーブル作成を行う。
+```shell
+インポート
+mvnw.cmd spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.name=importUsersJob"
+```
+
+3.application.propertiesの初期化設定を`never`に戻す。  
+`schema-all.sql`を使った初期化は`OFF`になる。
+```
+データベース初期化用DDL実行モード（ALWAYS、EMBEDDED、NEVER）
+spring.sql.init.mode=never
+```
+
+※`schema-all.sql`のcreate table文を修正した場合には、再度、上記手順を実施すること。
+
 ## 実行 spring-boot:run
 
 実行する
 ```shell
 コマンドプロンプトで実行
+
+インポート
 mvnw.cmd spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.name=importUsersJob"
+
+エクスポート
 mvnw.cmd spring-boot:run -Dspring-boot.run.arguments="--spring.batch.job.name=exportUsersJob"
 ```
 
-## H2DBの確認
+## H2DBのデータ確認
 ```shell
 H2DBサーバの起動
 java -jar h2db/h2-2.3.232.jar

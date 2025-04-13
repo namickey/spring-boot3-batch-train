@@ -1,4 +1,4 @@
-package com.example.demo.batch.master.user.receive;
+package com.example.demo.batch.sample.master.user.receive;
 
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.lang.NonNull;

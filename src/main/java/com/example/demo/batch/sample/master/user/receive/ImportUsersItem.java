@@ -1,4 +1,4 @@
-package com.example.demo.batch.master.user.receive;
+package com.example.demo.batch.sample.master.user.receive;
 
 import java.time.LocalDate;
 import com.example.demo.common.entity.Users;

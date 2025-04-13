@@ -1,4 +1,4 @@
-package com.example.demo.batch.master.user.send;
+package com.example.demo.batch.sample.master.user.send;
 
 import org.springframework.batch.item.file.transform.FieldExtractor;
 import org.springframework.stereotype.Component;
