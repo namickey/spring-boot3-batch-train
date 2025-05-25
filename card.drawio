@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="yGmV4a3jAjI65rgRJ6Fj" name="Page-1">
-        <mxGraphModel dx="1764" dy="775" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#FFFFFF" math="0" shadow="0">
+        <mxGraphModel dx="1857" dy="509" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#FFFFFF" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -257,10 +257,10 @@
                         <mxPoint x="10" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="125" value="月次&lt;br&gt;月末締め&lt;br&gt;翌月5日請求" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="125" value="月次&lt;br&gt;月末締め&lt;br&gt;翌月5日請求通知" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#000000;" parent="1" vertex="1">
                     <mxGeometry x="369.5" y="377" width="120" height="44" as="geometry"/>
                 </mxCell>
-                <mxCell id="126" value="16日" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="126" value="16日引落&lt;div&gt;結果受領&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#000000;" parent="1" vertex="1">
                     <mxGeometry x="734.5" y="372" width="60" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="127" value="日次&lt;br&gt;30日超過" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#000000;" parent="1" vertex="1">
@@ -341,7 +341,7 @@
                         <mxPoint x="474.5" y="370" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="163" value="月次&lt;br&gt;月末締め&lt;br&gt;翌月15日引落" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#000000;" parent="1" vertex="1">
+                <mxCell id="163" value="&lt;div&gt;月次&lt;/div&gt;翌月15日&lt;div&gt;引き落し&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontColor=#000000;" parent="1" vertex="1">
                     <mxGeometry x="576.5" y="368" width="120" height="44" as="geometry"/>
                 </mxCell>
                 <mxCell id="165" value="クレジットカード（&lt;span style=&quot;background-color: transparent;&quot;&gt;契約、売上、請求、&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;口座振替、督促）&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" parent="1" vertex="1">
