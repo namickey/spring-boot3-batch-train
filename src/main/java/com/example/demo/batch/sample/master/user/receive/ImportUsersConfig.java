@@ -2,14 +2,17 @@ package com.example.demo.batch.sample.master.user.receive;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
@@ -35,10 +38,10 @@ public class ImportUsersConfig {
     private final ImportUsersProcessor userImportProcessor;
     private final ImportUsersWriter userImportWriter;
     private final UsersMapper usersMapper;
-    
+
     @Bean
     public FlatFileItemReader<ImportUsersItem> reader() {
-        
+
         FlatFileItemReader<ImportUsersItem> reader = new FlatFileItemReader<>();
 
         // ヘッダー行をスキップ
@@ -62,10 +65,15 @@ public class ImportUsersConfig {
     };
 
     @Bean
-    public Tasklet trancateTasklet() {
-        return (contribution, chunkContext) -> {
-            usersMapper.truncate();
-            return null;
+    public Tasklet truncateTasklet() {
+        return new Tasklet() {
+            @Override
+            public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) {
+                // usersテーブルを全件削除する
+                usersMapper.truncate();
+                // 処理が完了したことを示す
+                return RepeatStatus.FINISHED;
+            }
         };
     }
 
@@ -87,7 +95,7 @@ public class ImportUsersConfig {
     @Bean
     public Step importUsersStep1() {
         return new StepBuilder("importUsersStep1", jobRepository)
-                .tasklet(trancateTasklet(), platformTransactionManager)
+                .tasklet(truncateTasklet(), platformTransactionManager)
                 .allowStartIfComplete(true)
                 .build();
     }
@@ -103,7 +111,7 @@ public class ImportUsersConfig {
                 .processor(userImportProcessor)
                 .writer(userImportWriter)
                 .allowStartIfComplete(true) // true:何度でも再実行可能。false:一度だけ実行可能。
-                .faultTolerant()  // 耐障害性設定。例外等が発生しても処理を継続する。
+                .faultTolerant() // 耐障害性設定。例外等が発生しても処理を継続する。
                 .skipPolicy(new CustomSkipPolicy()) // カスタムスキップポリシーを設定。特定例外はスキップする。
                 .listener(logChunkListener) // ログ出力（チャンク単位）
                 .build();
