@@ -9,7 +9,7 @@ import com.example.demo.common.entity.Users;
 public class ExportUsersProcessor implements ItemProcessor<Users, ExportUsersItem> {
 
     @Override
-    public ExportUsersItem process(@SuppressWarnings("null") Users users) throws Exception {
+    public ExportUsersItem process(Users users) throws Exception {
         ExportUsersItem item = new ExportUsersItem();
         item.setId(users.getId());
         item.setName(users.getName());
