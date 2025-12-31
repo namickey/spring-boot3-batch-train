@@ -59,7 +59,7 @@ Spring-Bootでバッチアプリケーション開発トレーニング
 
 ## 使用するフレームワーク
 
-* spring-boot3.4
+* spring-boot3.5
 * spring-boot-starter-batch
 * mybatis
 * lombok
