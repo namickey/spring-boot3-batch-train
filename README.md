@@ -334,6 +334,15 @@ https://start.spring.io/
 > https://www.omegas.co.jp/gas/living/plan/payment#link-01  
 
 
+## 読み物
+
+> [!NOTE]
+> 
+> Spring Batch でサブスク1億件のクレカ決済処理【JJUG CCC 2021 Fall登壇】  
+> https://www.gmo-pg.com/blog/articles/article-0069/  
+> 
+> 
+
 ## 参考
 
 ※2025年3月時点
