@@ -278,7 +278,13 @@ https://start.spring.io/
 
 ### 3. 自分のgithubアカウントを作って、作ったソースを公開しよう
 
-### 4. GitHub Copilotを使ってみよう
+### 4. 知識を深めよう
+
+> [!TIP]
+> Spring Batch 完全ガイド  
+> https://zenn.dev/movita/articles/2dd1ef11ae6e0c  
+
+### 5. GitHub Copilotを使ってみよう
 
 > [!TIP]
 > VS CodeでGitHub Copilot 無料版の導入　備忘録  
@@ -287,7 +293,7 @@ https://start.spring.io/
 > GitHub Copilot を完全に使いこなす会  
 > https://zenn.dev/microsoft/articles/github_copilot_intro  
 
-### 5. 業務例に従って、バッチアプリケーションを作成しよう
+### 6. 業務例に従って、バッチアプリケーションを作成しよう
 - 業務例１　クレジットカード
   - 会員登録、カード発行
   - 日々、カードを使って支払い
