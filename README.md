@@ -341,7 +341,20 @@ https://start.spring.io/
 > Spring Batch でサブスク1億件のクレカ決済処理【JJUG CCC 2021 Fall登壇】  
 > https://www.gmo-pg.com/blog/articles/article-0069/  
 > 
+> 【Java・SpringBoot】Spring JDBC / BeanPropertyRowMapper（SpringBootアプリケーション実践編16）  
+> https://qiita.com/suema0331/items/f512531fbd4968f99d82  
 > 
+> 【Java・SpringBoot】Spring JDBC / ResultSetExtractor（SpringBootアプリケーション実践編17）  
+> https://qiita.com/suema0331/items/b55919b2076207790164  
+> 
+> 【Java・SpringBoot】RowCallbackHandlerでコールバック / CSV出力機能（SpringBootアプリケーション実践編18）  
+> https://qiita.com/suema0331/items/e3ca75dff8e9118772bc  
+> 
+> Java ORマッパー選定のポイント #jsug  
+> https://www.docswell.com/s/MasatoshiTada/596WW5-how-to-choose-java-orm  
+> 
+> [Java] Spring Bootで「JDBC」はもうオワコン？実は最強の武器になる瞬間  
+> https://saycon.co.jp/archives/neta/java-spring-boot%E3%81%A7%E3%80%8Cjdbc%E3%80%8D%E3%81%AF%E3%82%82%E3%81%86%E3%82%AA%E3%83%AF%E3%82%B3%E3%83%B3%EF%BC%9F%E5%AE%9F%E3%81%AF%E6%9C%80%E5%BC%B7%E3%81%AE%E6%AD%A6%E5%99%A8%E3%81%AB  
 
 ## 参考
 
